@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const storageUnits = await prisma.storageUnit.findMany();
       res.status(200).json(storageUnits);
     } catch (error) {
+      console.error('Error fetching storage units:', error);
       res.status(500).json({ error: 'Failed to fetch storage units' });
     }
   } else if (req.method === 'POST') {
@@ -24,6 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       res.status(201).json(newStorageUnit);
     } catch (error) {
+      console.error('Error creating storage unit:', error);
       res.status(500).json({ error: 'Failed to create storage unit' });
     }
   } else {
