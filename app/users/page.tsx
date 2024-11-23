@@ -14,9 +14,23 @@ export default function Users() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/users')
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/users');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setUsers(data);
+        } else {
+          console.error('Expected an array but got:', data);
+          setMessage('Failed to fetch users.');
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        setMessage('Failed to fetch users.');
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {
@@ -40,6 +54,7 @@ export default function Users() {
         setMessage(`Error: ${errorData.error}`);
       }
     } catch (error) {
+      console.error('Error creating user:', error);
       setMessage('An unexpected error occurred.');
     }
   };
